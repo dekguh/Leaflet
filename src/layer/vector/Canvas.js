@@ -80,7 +80,7 @@ export const Canvas = Renderer.extend({
 	_destroyContainer() {
 		Util.cancelAnimFrame(this._redrawRequest);
 		delete this._ctx;
-		DomUtil.remove(this._container);
+		this._container.remove();
 		DomEvent.off(this._container);
 		delete this._container;
 	},
@@ -381,7 +381,7 @@ export const Canvas = Renderer.extend({
 		const layer = this._hoveredLayer;
 		if (layer) {
 			// if we're leaving the layer, fire mouseout
-			DomUtil.removeClass(this._container, 'leaflet-interactive');
+			this._container.classList.remove('leaflet-interactive');
 			this._fireEvent([layer], e, 'mouseout');
 			this._hoveredLayer = null;
 			this._mouseHoverThrottled = false;
@@ -406,7 +406,7 @@ export const Canvas = Renderer.extend({
 			this._handleMouseOut(e);
 
 			if (candidateHoveredLayer) {
-				DomUtil.addClass(this._container, 'leaflet-interactive'); // change cursor
+				this._container.classList.add('leaflet-interactive'); // change cursor
 				this._fireEvent([candidateHoveredLayer], e, 'mouseover');
 				this._hoveredLayer = candidateHoveredLayer;
 			}
@@ -490,5 +490,5 @@ export const Canvas = Renderer.extend({
 // @factory L.canvas(options?: Renderer options)
 // Creates a Canvas renderer with the given options.
 export function canvas(options) {
-	return Browser.canvas ? new Canvas(options) : null;
+	return new Canvas(options);
 }
